@@ -1,10 +1,26 @@
+import { useEffect, useState } from 'react'
 import Spline from '@splinetool/react-spline'
 
 export default function Hero3D() {
+  const [mounted, setMounted] = useState(false)
+  const [splineError, setSplineError] = useState(null)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
   return (
     <section id="home" className="relative min-h-[88vh] w-full bg-black text-white overflow-hidden">
       <div className="absolute inset-0">
-        <Spline scene="https://prod.spline.design/EF7JOSsHLk16Tlw9/scene.splinecode" style={{ width: '100%', height: '100%' }} />
+        {mounted && !splineError ? (
+          <Spline
+            scene="https://prod.spline.design/EF7JOSsHLk16Tlw9/scene.splinecode"
+            style={{ width: '100%', height: '100%' }}
+            onError={(e) => setSplineError(e?.message || 'Failed to load 3D scene')}
+          />
+        ) : (
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(236,72,153,0.15),transparent_40%),radial-gradient(circle_at_80%_30%,rgba(168,85,247,0.15),transparent_40%),radial-gradient(circle_at_50%_80%,rgba(59,130,246,0.15),transparent_40%)]" />
+        )}
       </div>
 
       <div className="relative z-10">
@@ -27,6 +43,9 @@ export default function Hero3D() {
                 Contact me
               </a>
             </div>
+            {splineError && (
+              <p className="mt-4 text-xs text-white/50">3D scene failed to load. Showing a visual fallback.</p>
+            )}
           </div>
         </div>
       </div>
